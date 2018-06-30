@@ -1,23 +1,76 @@
-import React from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+import React, {Component} from 'react';
+import {Image,Alert, View, Text, Button, TextInput, StyleSheet} from 'react-native';
 
-export default class App extends React.Component {
-  render() {
+class Blink extends Component{
+  constructor(e){
+    super(e);
+    this.state={isShowingText:true};
+
+    setInterval(()=>{
+      this.setState(e=>{
+        return {isShowingText:!e.isShowingText};
+      })
+    },1000);
+  }
+
+  render(){
+    let title=this.state.isShowingText?this.props.text:'';
     return (
-      <View style={styles.container}>
-        <Text>Open up App.js to start working on your app!</Text>
-        <Text>Changes you make will automatically reload.</Text>
-        <Text>Shake your phone to open the developer menu.</Text>
+      <Text style={{color:'white'}}>{title}</Text>
+    );
+  }
+}
+
+export default class Main extends Component {
+  _onPressButtonApply=()=>{
+    this.setState({
+      Status:this.state.ModerationStatus
+    });
+    Alert.alert('Обновлено состояние: '+this.state.ModerationStatus);
+  }
+
+  constructor(e){
+    super(e);
+    this.state={Status:'GebekovAS', ModerationStatus:''};    
+  }
+
+  render() {     
+    return (
+      <View style={{flex:1}}>        
+        <View style={styles.viewHead}>
+         <Blink text={this.state.Status} />         
+        </View>
+        <View style={styles.viewContent}>
+          <View style={styles.viewMainContainer}>
+            <TextInput style={styles.inputText}
+            onChangeText={(text)=>this.setState({ModerationStatus:text})} />
+            <Button 
+              onPress={this._onPressButtonApply}
+              title='Apply'
+            />            
+            
+
+          </View>
+        </View>
       </View>
     );
   }
 }
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
+const styles=StyleSheet.create({
+  viewHead:{
+    alignItems:'center', backgroundColor:'steelblue',height:20
   },
+  viewContent:{
+    flex:1,
+    justifyContent:'center',
+    alignItems:'center'
+  },  
+  viewMainContainer:{
+    alignItems:'center'
+  },
+  inputText:{
+    height:40,
+    width:200
+  }
 });
